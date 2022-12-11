@@ -1,15 +1,13 @@
-import express, { Router } from "express";
-import connection from "../database/db.js";
+import { Router } from "express";
+import {
+  getCategories,
+  postCategory,
+} from "../controllers/categoriesController.js";
+import categoryValidationMiddleware from "../middlewares/categoryValidationMiddleware.js";
 
 const router = Router();
 
-router.get("/oi", async (req, res) => {
-  const customers = await connection.query(`
-    SELECT *
-    FROM customers;
-  `);
-
-  res.send(customers.rows);
-});
+router.get("/categories", getCategories);
+router.post("/categories", categoryValidationMiddleware, postCategory);
 
 export default router;
