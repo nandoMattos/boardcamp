@@ -2,20 +2,51 @@ import dayjs from "dayjs";
 import connection from "../database/db.js";
 
 export async function getRentals(req, res) {
-  try {
-    const rentals = await connection.query(`
-      SELECT r.*, c.id, c.name, g.id, g.name , g."categoryId", cat.name
+  let rentals = req.rentals;
+
+  if (rentals === undefined) {
+    try {
+      rentals = await connection.query(
+        `
+      SELECT 
+        r.*, c.id as "cId", c.name as "customerName", g.id as "gameId",
+        g.name as "gameName" , g."categoryId", cat.name
       FROM rentals r
       JOIN customers c ON r."customerId" = c.id
       JOIN games g ON r."gameId" = g.id
       JOIN categories cat ON g."categoryId" = cat.id;
-    `);
-
-    res.send(rentals.rows);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+      `
+      );
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
   }
+
+  const formatedRents = rentals.rows.map((r) => {
+    return {
+      id: r.id,
+      customerId: r.cId,
+      gameId: r.gameId,
+      rentDate: r.rentDate,
+      daysRented: r.daysRented,
+      returnDate: r.returnDate,
+      originalPrice: r.originalPrice,
+      delayFee: r.delayFee,
+      customer: {
+        customerId: r.cId,
+        name: r.customerName,
+      },
+      game: {
+        id: r.gameId,
+        name: r.gameName,
+        categoryId: r.categoryId,
+        categoryName: r.name,
+      },
+    };
+  });
+
+  res.send(formatedRents);
 }
 
 export async function postRental(req, res) {
