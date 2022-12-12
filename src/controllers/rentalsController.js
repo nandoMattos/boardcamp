@@ -1,9 +1,26 @@
 import dayjs from "dayjs";
 import connection from "../database/db.js";
 
+export async function getRentals(req, res) {
+  try {
+    const rentals = await connection.query(`
+      SELECT r.*, c.id, c.name, g.id, g.name , g."categoryId", cat.name
+      FROM rentals r
+      JOIN customers c ON r."customerId" = c.id
+      JOIN games g ON r."gameId" = g.id
+      JOIN categories cat ON g."categoryId" = cat.id;
+    `);
+
+    res.send(rentals.rows);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
+
 export async function postRental(req, res) {
   const { daysRented } = req.rentalInfo;
-  const { pricePerDay } = req.pricePerDay;
+  const pricePerDay = req.pricePerDay;
 
   const rental = {
     ...req.rentalInfo,
@@ -31,6 +48,8 @@ export async function postRental(req, res) {
         rental.delayFee,
       ]
     );
+
+    res.status(201);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { postRental } from "../controllers/rentalsController.js";
+import { getRentals, postRental } from "../controllers/rentalsController.js";
 import customerIdExistsValidationMiddleware from "../middlewares/rentalValidation/customerIdExistsValidationMiddleware.js";
 import gameIdExistsValidationMiddleware from "../middlewares/rentalValidation/gameIdExistsValidationMiddleware.js";
-import getPriceGameMiddleware from "../middlewares/rentalValidation/getPriceGameMiddleware.js";
+import gameIsAvailableValidationMiddleware from "../middlewares/rentalValidation/gameIsAvailableValidationMiddleware.js";
 import rentalBodyValidationMiddleware from "../middlewares/rentalValidation/rentalBodyValidationMiddleware.js";
 
 const router = Router();
@@ -14,8 +14,7 @@ router.post(
   rentalBodyValidationMiddleware,
   customerIdExistsValidationMiddleware,
   gameIdExistsValidationMiddleware,
-  //gameIsAvailableValidationMiddleware,
-  getPriceGameMiddleware,
+  gameIsAvailableValidationMiddleware,
   postRental
 );
 

@@ -6,7 +6,7 @@ export default async function gameIdExistsValidationMiddleware(req, res, next) {
   try {
     const gameExists = await connection.query(
       `
-      SELECT *
+      SELECT "pricePerDay"
       FROM games 
       WHERE id = $1
     `,
@@ -17,6 +17,8 @@ export default async function gameIdExistsValidationMiddleware(req, res, next) {
       res.status(400).send("Jogo não existente.");
       return;
     }
+
+    req.pricePerDay = gameExists.rows[0].pricePerDay;
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

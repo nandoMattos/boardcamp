@@ -5,14 +5,28 @@ export default async function gameIsAvailableValidationMiddleware(
   res,
   next
 ) {
+  const { gameId } = req.rentalInfo;
   try {
-    const gameSchedule = connection.query(`
-      SELECT g.id, g."inStock", r."returnDate"
+    const gamesRented = await connection.query(
+      `
+      SELECT g."stockTotal"
       FROM games g
-      JOIN rentals r ON r."gameId" = g.id;
-    `);
+      JOIN rentals r ON r."gameId" = g.id
+      WHERE g.id = $1; 
+    `,
+      [gameId]
+    );
+
+    if (
+      gamesRented.rowCount != 0 &&
+      gamesRented.rows[0].stockTotal >= gamesRented.rowCount
+    ) {
+      res.status(400).send("Sem estoque.");
+      return;
+    }
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
   }
+  next();
 }
