@@ -6,7 +6,7 @@ import {
   updateCustomer,
 } from "../controllers/customersController.js";
 import customerBodyValidationMiddleware from "../middlewares/customerValidation/customerBodyValidationMiddleware.js";
-import customerExistsValidationMiddeware from "../middlewares/customerValidation/customerExistsValidationMiddeware.js";
+import customerCpfExistsValidationMiddeware from "../middlewares/customerValidation/customerCpfExistsValidationMiddeware.js";
 
 const router = Router();
 
@@ -15,13 +15,13 @@ router.get("/customers/:id", getCustomersById);
 router.post(
   "/customers",
   customerBodyValidationMiddleware,
-  customerExistsValidationMiddeware,
+  customerCpfExistsValidationMiddeware,
   postCustomer
 );
 router.put(
   "/customers/:id",
   customerBodyValidationMiddleware,
-  customerExistsValidationMiddeware,
+  customerCpfExistsValidationMiddeware,
   updateCustomer
 );
 

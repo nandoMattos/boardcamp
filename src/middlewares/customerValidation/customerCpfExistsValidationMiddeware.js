@@ -1,6 +1,6 @@
 import connection from "../../database/db.js";
 
-export default async function customerExistsValidationMiddeware(
+export default async function customerCpfExistsValidationMiddeware(
   req,
   res,
   next
