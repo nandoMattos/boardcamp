@@ -1,4 +1,3 @@
-import connection from "../../database/db.js";
 import categorySchema from "../../models/categorySchema.js";
 
 export default async function categoryBodyValidationMiddleware(req, res, next) {

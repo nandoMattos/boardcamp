@@ -3,6 +3,7 @@ import {
   getCustomers,
   getCustomersById,
   postCustomer,
+  updateCustomer,
 } from "../controllers/customersController.js";
 import customerBodyValidationMiddleware from "../middlewares/customerValidation/customerBodyValidationMiddleware.js";
 import customerExistsValidationMiddeware from "../middlewares/customerValidation/customerExistsValidationMiddeware.js";
@@ -16,6 +17,12 @@ router.post(
   customerBodyValidationMiddleware,
   customerExistsValidationMiddeware,
   postCustomer
+);
+router.put(
+  "/customers/:id",
+  customerBodyValidationMiddleware,
+  customerExistsValidationMiddeware,
+  updateCustomer
 );
 
 export default router;
