@@ -1,6 +1,6 @@
 import connection from "../../database/db.js";
 
-async function getQueryRentals(req, id, label) {
+async function getQueryRentals(res, id, label) {
   try {
     return await connection.query(
       `
