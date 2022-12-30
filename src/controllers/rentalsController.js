@@ -64,11 +64,11 @@ export async function postRental(req, res) {
   try {
     await connection.query(
       `
-    INSERT INTO rentals
-    ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
-    VALUES
-    ($1, $2, $3, $4, $5, $6, $7)
-    `,
+      INSERT INTO rentals
+      ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
+      VALUES
+      ($1, $2, $3, $4, $5, $6, $7)
+      `,
       [
         rental.customerId,
         rental.gameId,
@@ -80,7 +80,25 @@ export async function postRental(req, res) {
       ]
     );
 
-    res.status(201);
+    res.sendStatus(201);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
+
+export async function postRentalReturn(req, res) {
+  try {
+    await connection.query(
+      `
+      UPDATE rentals
+      SET "returnDate" = $1
+      WHERE id = $2
+    `,
+      [dayjs().format("YYYY-MM-DD"), req.params.id]
+    );
+
+    res.sendStatus(200);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

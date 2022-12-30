@@ -12,14 +12,14 @@ export default async function gameIsAvailableValidationMiddleware(
       SELECT g."stockTotal"
       FROM games g
       JOIN rentals r ON r."gameId" = g.id
-      WHERE g.id = $1; 
+      WHERE g.id = $1 AND r."returnDate" IS NULL; 
     `,
       [gameId]
     );
 
     if (
       gamesRented.rowCount != 0 &&
-      gamesRented.rows[0].stockTotal >= gamesRented.rowCount
+      gamesRented.rows[0].stockTotal <= gamesRented.rowCount
     ) {
       res.status(400).send("Sem estoque.");
       return;
