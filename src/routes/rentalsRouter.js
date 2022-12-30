@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deleteRental,
   getRentals,
   postRental,
   postRentalReturn,
@@ -12,6 +13,7 @@ import rentalBodyValidationMiddleware from "../middlewares/rentalValidation/rent
 import rentalClosedValidationMiddleware from "../middlewares/rentalValidation/rentalClosedValidationMiddleware.js";
 import rentalExistsValidationMiddleware from "../middlewares/rentalValidation/rentalExistsValidationMiddleware.js";
 import rentalIsLateValidationMiddleware from "../middlewares/rentalValidation/rentalIsLateValidationMiddleware.js";
+import rentalIsntClosedValidationMiddleware from "../middlewares/rentalValidation/rentalIsntClosedValidationMiddleware.js";
 
 const router = Router();
 
@@ -32,6 +34,13 @@ router.post(
   rentalClosedValidationMiddleware,
   rentalIsLateValidationMiddleware,
   postRentalReturn
+);
+
+router.delete(
+  "/rentals/:id",
+  rentalExistsValidationMiddleware,
+  rentalIsntClosedValidationMiddleware,
+  deleteRental
 );
 
 export default router;
